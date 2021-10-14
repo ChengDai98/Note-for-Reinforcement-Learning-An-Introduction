@@ -95,7 +95,22 @@ $$ A_t \dot{=} argmax_a Q_t(a) $$
 #### **$\epsilon$-greedy action**
 即以 $1-\epsilon$ 的概率采取greedy action，以 $\epsilon$ 采取另一个行动 $a$。</br>
 * 这个策略能够兼顾探索与利用。
-* $\epsilon$ 的取值会影响收益。
+* $\epsilon$ 的取值会影响收益，因此要给出一个合适的 $\epsilon$ 。
+
+### 2.3 The 10-armed Testbed
+本章来测试以上策略。
+
+### 2.4 Incremental Implementation
+增量问题实现，给出了一个增量形式的动作价值估计算法，基本的数学形式为：
+$$ Q_n \dot{=} \frac{\sum_{i = 1}^{n - 1}{R_i}}{n-1} $$
+* $R_i$：表示在第$i$次选择动作$a$之后的汇报
+* $Q_n$：表示在前$n$次实行动作$a$的经验基础上，对下一次再选到$a$的预测值。
+
+#### Optimization
+对算法进行了优化，其数学表示可以变换为：
+$$ Q_{n + 1} = Q_n + \frac{1}{n}[R_n - Q_n] $$
+
+
 
 
 
