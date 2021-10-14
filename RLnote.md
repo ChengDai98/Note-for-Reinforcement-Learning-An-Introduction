@@ -142,8 +142,35 @@ $$ (1) \sum_{n = 1} ^ {\infty} \alpha_n(a) = \infty$$
 $$ (2) \sum_{n = 1} ^ {\infty} \alpha_n^2(a) < \infty$$
 第一个条件是保证总体的步长参数足够长，以最终克服任何初始条件或随机波动。第二个条件保证最终的步长参数足够小以确保收敛。满足两个条件，$Q_n$将会向1收敛。当然。满足以上条件的步长参数序列一般会遇到收敛缓慢的问题，而不满足以上条件的条件的 $\alpha_n \equiv \alpha$ ，可以应用在提到的非稳定的问题中（也是在RL中一种常见的问题），所以是可取的。
 
-### ** 2.6 Optimistic Initial Values **
+### **2.6 Optimistic Initial Values**
+通过之前的指数加权平均值算法可以看出，$Q_1$能够在一定程度上的影响评估体系，通过设定高初始值能够鼓励模型在早期更多的进行探索的应用，即*乐观初值法*。
+但是本方法应用面较窄，仅适用于固定分布的问题。模型早期能够多进行exploration，后期进行exploitation，这是对于稳定情况的希望，而对于非稳定情况，就很难去讲了，可能在很多时刻都要进行exploration。（再改一下）
 
+### **2.7 Upper-Confidence-Bound Action Selection**
+UCB方法的数学表示如下：
+$$ A_t \dot{=} argmax_a[Q_t(a) + c \sqrt{\frac{\ln t}{N_t(a)}}]$$
+* $N_t(a)$ 表示在时间$t$之前选择动作$a$的次数。
+* $c > 0$ 表示控制探索的程度，置信度。
+* $c \sqrt{\frac{\ln t}{N_t(a)}}$ 是一个对估值的不确定性，通过改变这一项来决定未来的动作。
+
+UCB方法能够找出有着最大潜力的行动，但是在处理非平稳问题以及大的状态空间的问题并不好。
+
+### **2.8 Grandient Bandit Algorithms** 
+梯度赌博机算法给出了一种有关于动作的偏好的算法，即动作的选择概率基于某一个分布的，在采取行动按照趋势而非数值大小进行选择，其数学表示为：
+$$ Pr { A_t = a } \dot{=} \frac{e^{H_t(a)}}{\sum_{b = 1} ^ k e^{H_t(a)}} \dot{=} \pi_t(a) $$
+* $H_t(a)$是动作$a$的偏好值。
+* $\pi_t(a)$ 表示在时间$t$采取行动的概率。
+
+同时取得每一步的反馈后，我们需要利用随机上升梯度法来更新偏好值：
+$$H_{t+1}(A_t)\dot{=}H_t(A_t)+\alpha(R_t-\overline{R_t})(1-\pi_t(A_t))$$
+$$H_{t+1}(a)\dot{=}H_t(a)-\alpha(R_t-\overline{R_t})\pi_t(a)$$
+* 其中$\alpha > 0$ 为步长参数。
+* $\overline{R_t} \in (R)$ 是所有奖励的平均值。
+#### **Proof**
+看书。（再改一下）
+
+### **2.9 Associative Search (Contextual Bandit)**
+如何考虑关联性的任务，即每一步行动都会产生影响。（再改一下）
 
 
 
