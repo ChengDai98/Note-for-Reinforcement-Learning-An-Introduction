@@ -109,6 +109,47 @@ $$ Q_n \dot{=} \frac{\sum_{i = 1}^{n - 1}{R_i}}{n-1} $$
 #### Optimization
 对算法进行了优化，其数学表示可以变换为：
 $$ Q_{n + 1} = Q_n + \frac{1}{n}[R_n - Q_n] $$
+这个变换可以减少算法空间的复杂度，他的意义在于:
+$$ NewEstimate \leftarrow OldEstimate + StepSize[Target - OldEstimate] $$
+
+#### Pseuducode
+在使用了$ \epsilon $-greedy和增量方法后，给出赌博机算法的伪代码：
+> Initialize, for a = 1 to k:
+$Q(a)\leftarrow 0 $ \
+$N(a)\leftarrow 0 $ \
+Loop forever:
+$ A \leftarrow \left\{
+\begin{aligned}
+& argmax_aQ(a) & with \ probability \ 1-\epsilon \ (breaking \ ties \ randomly) \\
+& \text  a \ random \ action & with \ probability \ \epsilon \\
+\end{aligned}
+\right. $
+$ R \leftarrow bandit(A) $ \
+$ N(A)\leftarrow N(A) + 1$ \
+$ Q(A)\leftarrow Q(A) + \frac{1}{N(A)}[R-Q(A)]$
+
+### **2.5 Tracking a Nonstationay Problem**
+之前讨论的问题都是获得奖励的概率不会根据时间变化，即奖励的分布不会发生变化。实际情况一般来讲很难如此理想，本节讨论的是如何在不稳定的情况下解决赌博机问题，即tracking a nonstaionary problem。
+在这种情况下常用方法是调整步长参数（step-size parameter），因为如果奖励值的分布出现了变动，当前智能体如果要推测变动的话，相比于观测更久远的时间点的奖励回报，在较近的时间点上入手能够跟好的体现价值。
+新的数学形式如下：
+$$Q_{n + 1} \dot{=} Q_n + \alpha[R_n - Q_n]  (\alpha \in (0, 1]) $$
+其中 $ \alpha $ 就是步长参数，是一个常量，由此我们对上式进行变换（省略推导过程，懒得打那么多公式），整理得到：
+$$ Q_{n + 1} \dot{=} (1-\alpha)^n Q_1 + \sum_{i = 1} ^ n (1-\alpha) ^ {n - i} \alpha R_i $$
+可以看出两项参数 $(1-\alpha)^n +  \sum_{i = 1} ^ n (1-\alpha) ^ {n - i} \alpha = 1 $，这是一个加权平均式，所以被称为*指数新近加权平均值*(exponential recency-weighted average)。
+可以看出，当$i \rightarrow \infty$时，$R_i$在式子中的影响占比才更大。
+如果将$\alpha$看作一个序列${\alpha(n)}$，即我们可以逐步地改变步长参数，设定${\alpha_n(a)}$为处理完第$n$次动作选择后获取reward的步长参数，对这个序列有着这样的要求：
+$$ (1) \sum_{n = 1} ^ {\infty} \alpha_n(a) = \infty$$
+$$ (2) \sum_{n = 1} ^ {\infty} \alpha_n^2(a) < \infty$$
+第一个条件是保证总体的步长参数足够长，以最终克服任何初始条件或随机波动。第二个条件保证最终的步长参数足够小以确保收敛。满足两个条件，$Q_n$将会向1收敛。当然。满足以上条件的步长参数序列一般会遇到收敛缓慢的问题，而不满足以上条件的条件的 $\alpha_n \equiv \alpha$ ，可以应用在提到的非稳定的问题中（也是在RL中一种常见的问题），所以是可取的。
+
+### ** 2.6 Optimistic Initial Values **
+
+
+
+
+
+
+
 
 
 
