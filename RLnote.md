@@ -172,8 +172,17 @@ $$H_{t+1}(a)\dot{=}H_t(a)-\alpha(R_t-\overline{R_t})\pi_t(a)$$
 ### **2.9 Associative Search (Contextual Bandit)**
 如何考虑关联性的任务，即每一步行动都会产生影响。（再改一下）
 
-
-
+## Chapter 3 : Finite Markov Decision Proccess
+有限马尔可夫决策过程
+### **3.1 The Agent-Environment Interface**
+### **3.2 Goals and Rewards**
+### **3.3 Returns**
+### **3.4 Unified Notation for Episodic and Continuing Tasks**
+### **3.5 The Markov Property**
+### **3.6 Markov Decision Processes**
+### **3.7 Value Functions**
+### **3.8 Optimal Value Functions**
+### **3.9 Optimality and Approximation**
 
 
 
