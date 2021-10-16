@@ -167,22 +167,81 @@ $$H_{t+1}(a)\dot{=}H_t(a)-\alpha(R_t-\overline{R_t})\pi_t(a)$$
 * 其中$\alpha > 0$ 为步长参数。
 * $\overline{R_t} \in (R)$ 是所有奖励的平均值。
 #### **Proof**
-看书。（再改一下）
+看书。
+<!-- （再改一下） -->
 
 ### **2.9 Associative Search (Contextual Bandit)**
-如何考虑关联性的任务，即每一步行动都会产生影响。（再改一下）
+如何考虑关联性的任务，即每一步行动都会产生影响。
+<!-- （再改一下） -->
 
 ## Chapter 3 : Finite Markov Decision Proccess
-有限马尔可夫决策过程
+有限马尔可夫决策过程可以适用于，当当前选择的状态和动作对未来的决策和奖励有所影响的时候，如何估计动作的价值和状态价值，即解决一种序贯决策问题。
 ### **3.1 The Agent-Environment Interface**
+个体环境接口给出了MDP中个体与环境之间的交互关系：
+
+```mermaid
+graph LR;
+　　agent --> |action A| environment
+    environment --> |state S| agent
+    environment --> |reward R| agent
+```
+* agent为学习者智能体。
+* environment为agent与外界交互实体的集合，即不能被agent任意改变的事物都是环境。
+* 其中action &A& 为 $A_t$，表示在t时刻进行的动作A。
+* State $S$为$S_t$是根据动作从环境中得到的下一个状态，反馈给智能体。
+* Reward $R$为$R_t$是根据动作从环境中得到的下一个奖励，反馈给智能体。
+* 从顺序上来讲，如果以时间$t$为起始点，以上的两项下标应该为$t + 1$。
+
+这个图可以解释为agent和environment在某一个时间点$t$上进行交互，agent在状态$S \in S$处的基础上进行了行动$A_t \in A(s)$，之后agent会得到相应动作的数值奖励反馈$R_{t+1} \in R \subset \mathbb{R}$并且进入下一个状态$S_1$，同时不断地进行这个循环。此时MDP和agent产生了一个序列轨迹(trajectory):
+$$ S_0, A_0, R_1, S_1, A_1, R_2, S_2, A_2,... $$
+对于随机变量$R_t$和$S_t$都有着变心阿德离散概率分布，仅仅依赖于之前的动作和状态。对于未来的状态和反馈奖励在时间$t$发生的概率为：
+$$ p(s^\prime, r|s, a) \dot{=} Pr \{S_t=s^\prime\, R_t=r|S_{t-1}=s, A_{t-1}=a\} $$
+对于一个MDP问题，理解他的三个重要的要素状态、行动以及奖励是很重要的。
+* action即agent的决策行动。
+* state即agent的行动标准。
+* rewards即agent的所有action的目标。
+
+对于对于未来的状态和反馈奖励在时间$t$发生的概率公式中有着很多种变化。
+<!-- （补上公式） -->
+
 ### **3.2 Goals and Rewards**
-### **3.3 Returns**
+对于智能体来讲，奖励就是环境传递给个体的信号；而智能体或者说RL的目标就是最大化收到的总奖励的量，这是RL的一个显著特征。
+对于一个智能体而言，外界提供的奖励能够使其达到想要的目标，这些都是智能体自己学习来的，而非一开始就告诉它哪个选项好，让它选择某一个。此时智能体有了探索环境的自由度，通过不断地探索环境和利用掌握的知识来达到目标。
+### **3.3 Returns and Episodes**
+数学形式定义最大化累计奖励要考虑智能体要最大化预期的奖励，此时可以定义为：
+$$ G_t \dot{=} \sum^{T}_{i = t+1}R_i$$
+其中T是最后的一个时间步，$G_t$就是定义的回报。
+片段任务(episodes tasks)一般来讲指的是对不同的结果有不同的奖励，上一节的任务片段和下一节的任务片段没有联系。片段任务中，所有非终结状态的集合为$S$，终止时间$T$为随机变量，$S^+$为$S$和所有终止态。\
+连续任务（continuous tasks）意为智能体和环境持续不断的交互产生的任务。此时的$T \rightarrow \infty$，无法得到$G_t$，所以要引入衰减因子（折扣因子？）。\
+折扣因子（disconunted）$ \gamma $，当智能体选择动作$A_t$时得到的衰减回报为：
+$$G_t \dot{=} \sum_{k=0}^{\infty}{\gamma^k}R_{t+k+1} \quad\quad 0 \leq \gamma \leq1$$
+
+将上式变形为：
+$$G_t \dot{=} R_{t+1} + \gamma G_{t+1}$$
+
+可以看出，给定$\gamma$不同的值的时候，能够让智能体更有的短视或远见。
+<!-- 写一下练习 -->
 ### **3.4 Unified Notation for Episodic and Continuing Tasks**
-### **3.5 The Markov Property**
-### **3.6 Markov Decision Processes**
-### **3.7 Value Functions**
-### **3.8 Optimal Value Functions**
-### **3.9 Optimality and Approximation**
+对于片段任务来讲，我们可以给出如下状态机，来保证与连续任务状态的统一形式，考虑一种吸收态，状态转移总会回到自己，同时奖励为0，可以表示为：
+
+```mermaid
+graph LR;
+　　S0 --> |R1 += 1| S1
+    S1 --> |R2 += 1| S2
+    S2 --> |R3 += 1| S3
+    S3 --> |R4 += 1| S4  
+    S4 --> |R5 += 0| S4   
+    S0((S0))
+    S1((S1))
+    S2((S2))
+    S3((S3))
+    S4((S4))
+```
+### **3.5 Policies and Value Functions**
+策略和价值函数
+### **3.6 Optimal Policies and Optimal Value Functions**
+### **3.7 Optimality and Approximation**
+
 
 
 
