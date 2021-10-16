@@ -238,9 +238,34 @@ graph LR;
     S4((S4))
 ```
 ### **3.5 Policies and Value Functions**
-策略和价值函数
+价值函数给出了量化估计在一个条件下行动的好坏程度。\
+策略是状态空间和行动空间到概率空间的一个映射，用来计算价值函数。\
+定义$ \pi(a|s) $ 为状态$s$时选择动作$a$的概率。\
+在状态$s$下，策略$\pi$的动作价值函数为$v_{\pi}(s)$，可以数学表达为：
+$$ v_{\pi_s} \dot{=} \mathbb{E_{\pi}} [G_t|S_t=s], \quad  \forall s \in \mathbb{S}$$
+
+对于在策略$\pi$，状态$s$下采取动作$a$的价值为：
+$$q_{\pi}(s,a) \dot{=} \mathbb{E}_{\pi}[G_t|S_t = s, A_t=a]$$
+
+#### Bellman Equation
+对于$\forall$策略$\pi$和状态$s$，当前的价值和未来的价值函数满足一个递归关系，被称为贝尔曼方程(Bellman Equation)，对于上式$v_{\pi}(s)$的贝尔曼方程为：
+<!-- （推导过程没写） -->
+$$ v_{\pi}(s) = \sum_a \pi(a|s) \sum _{s',r}p(s',r|s,a)[r+\gamma v_{pi}(s')] $$
+
+其描述了状态值和所有后继状态值的关系。
+<!-- （画图没搞） -->
+
 ### **3.6 Optimal Policies and Optimal Value Functions**
-### **3.7 Optimality and Approximation**
+最优价值函数，在MDP问题中，当且仅当一个策略$\pi$在任意情况下的期望的返回值都大于等于策略$\pi'$的期望返回值时名称$\pi$优于$\pi'$。即：$\pi \ge \pi'$当且仅当$v_{\pi}(s) \ge \pi'(s), \forall s \in \mathbb{S}$
+* 最优策略为至少存在一个策略优于其他策略
+* 最优状态值函数$v_*(s) \dot{=} max_{\pi}v_{\pi}(s), \forall s \in \mathbb{S}$
+* 最优行动值函数$q_*(s, a) \dot{=} max_{\pi}q_{\pi}(s, a), \forall s \in \mathbb{S}$
+
+#### Bellman Optimality Equation
+贝尔曼最优方程：
+<!-- 推导过程 -->
+* $v_*(s) = {max}_a \mathbb{E}[R_{t+1}+\gamma v_*(S_{t+1})|S_t=s,A_t=a]$
+* $q_*(s,a) = \mathbb{E}[R_{t+1}+\gamma {max}_{a'} q_*(S_{t+1},a')|S_t=s,A_t=a]$
 
 
 
