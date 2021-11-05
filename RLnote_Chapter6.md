@@ -54,3 +54,12 @@ $$ Q(S_t,A_t) \leftarrow Q(S_t,A_t)+\alpha [R_{t+1}+\gamma max_a Q(S_{t+1},a)−
 $$ Q(S_t,A_t) \leftarrow Q(S_t,A_t)+\alpha [R_{t+1}+\gamma \mathbb{E}_{\pi}[Q(S_{t+1},A_{t+1})|S_{t+1}]−Q(S_t,A_t)] \leftarrow Q(S_t,A_t)+\alpha [R_{t+1}+\gamma \sum_a \pi (a|S_{t+1})Q(S_{t+1},a)−Q(S_t,A_t)] $$
 
 ### 6.7 Maximization Bias and Double Learning
+#### double learning
+* 将样本分划为两个集合，并分别学习出独立的估计，简记作$Q_1(a)$ $Q_2(a)$，两者均是对真实值 $q(a)$ 的估计。
+* 用其中一个估计值来决定最优行动 $A^* = argmax_a Q_1(a)$ 。
+* 通过另一个估计值来计算最优行动对应的值函数 $Q_2(A^*) = Q_2(argmax_a Q_1(a))$。$Q_2(A^*)$ 是无偏估计，这是因为 $\mathbb{E}[Q_2(A^*)] = q(A^*)$ 。
+* 还可以重复一遍上述过程，并替换两个集合，得到另一个无偏估计 $Q_1(argmax_a Q_2(a))$ 。
+
+### 6.8 Games, Afterstates, and Other Special Cases
+总是有一些特殊的任务可以通过专门的方式得到更好的处理。
+那里学到的函数通常意义上既没有动作价值函数也没有状态价值函数。 传统的状态价值函数评估个体可以选择操作的状态，但是在个体移动之后，井字棋游戏中使用的状态价值函数评估棋盘位置。 让我们称这些为 afterstates，相应得价值函数为 afterstate价值函数。 
